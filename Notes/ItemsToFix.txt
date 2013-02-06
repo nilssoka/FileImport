@@ -1,0 +1,20 @@
+* Make buttons look like the rest of the application
+* Move "First Name", "Last Name" check boxes to the left.  This might take changing from the "label" html control.
+* Make text a little smaller and closer together
+* Make to the top box (File to Import) and the file selection two different boxes.
+* Upload File and Apply should group together and Delete and Process File should be together
+* Document the functionality - this will have to wait till later.
+
+
+Advanced:
+* When you preview a file collopse the middle sections
+
+Later:
+* Update drop down lists for actions to full name (skip, update, etc)
+
+Bugs:
+
+
+Chris Items:
+* Move to the modules folder
+* Problem with uploading files.
