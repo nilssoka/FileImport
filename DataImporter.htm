@@ -1,0 +1,851 @@
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="DataImporter_files/style_oemr.css" type="text/css">
+<script type="text/javascript" src="DataImporter_files/dialog.js"></script>
+
+<link rel="stylesheet" type="text/css" href="DataImporter_files/jquery.css" media="screen">
+<script type="text/javascript" src="DataImporter_files/textformat.js"></script>
+<script type="text/javascript" src="DataImporter_files/dialog.js"></script>
+<script type="text/javascript" src="DataImporter_files/jquery.js"></script>
+<script type="text/javascript" src="DataImporter_files/jquery_002.js"></script>
+
+<script type="text/javascript" src="DataImporter_files/common.js"></script>
+
+<title>Data Importer</title>
+<script type="text/javascript">
+
+var W3CDOM = (document.createElement && document.getElementsByTagName);
+
+function init() {
+	document.getElementById("dataFile").onchange = 
+		function() {
+		document.getElementById("fakeFileInputBox").value  = document.getElementById("dataFile").value;
+	};
+	if (!W3CDOM) return;
+	
+	processTableChoicesAndMatching();
+	
+}
+
+function processTableChoicesAndMatching() {
+	//Check that values have pid.
+	var columnList = document.getElementById('columnList');
+	var x = columnList.getElementsByTagName('div');
+	var pidFound = false;
+	//
+	for(var i =0;i<x.length;i++) {
+		if(x[i].innerHTML == "pid") {
+			pidFound = true;
+			break;
+		}
+	}
+	if(!pidFound) {
+
+
+		document.getElementById('matchLName').disabled = true;
+		document.getElementById('matchLName').checked = false;
+		document.getElementById('matchFName').disabled = true;
+		document.getElementById('matchFName').checked = false;
+		document.getElementById('matchMName').disabled = true;
+		document.getElementById('matchMName').checked = false;
+		document.getElementById('matchSS').disabled = true;
+		document.getElementById('matchSS').checked = false;
+		document.getElementById('matchDateOfBirth').disabled = true;
+		document.getElementById('matchDateOfBirth').checked = false;
+		document.getElementById('matchSex').disabled = true;
+		document.getElementById('matchSex').checked = false;
+		document.getElementById('matchPatient_Id').disabled = true;
+		document.getElementById('matchPatient_Id').checked = false;
+		document.getElementById('matchAddNew').disabled = true;
+		document.getElementById('matchAddNew').checked = false;
+		document.getElementById('matchSuffix').innerHTML = ('You have not selected a table that contains a <i>pid</i> field. Therefore you may not use matching.');
+	}
+	else {
+		//Enable matching
+		if(document.getElementBydId('tableList').value == "patient_data") {
+			document.getElementById('matchAddNew').disabled = false;
+			
+		}
+		else { //Table is not patient_data so just allow matching.
+			
+		}
+		document.getElementById('matchLName').disabled = false;
+		document.getElementById('matchFName').disabled = false;
+		document.getElementById('matchMName').disabled = false;
+		document.getElementById('matchSS').disabled = false;
+		document.getElementById('matchDateOfBirth').disabled = false;
+		document.getElementById('matchSex').disabled = false;
+		document.getElementById('matchPatient_Id').disabled = false;
+	}
+}
+
+function updateRowOptions(item) {
+	var i = 0;
+	var action = document.getElementById("action_"+i);
+	while(action != null) {
+		setSelectValue(action,item.value);
+		i++;
+		action = document.getElementById("action_"+i);
+	}
+	item.value = "";
+}
+
+function setSelectValue(item, value) {
+	for(var i=0;i<item.options.length; i++) {
+		if(item.options[i].text == value) {
+			item.value = value;
+			break;
+		}
+	}
+}
+
+function fileSelected() {
+	var statusMessage = document.getElementById('statusMessage');
+	statusMessage.innerHTML = "You have selected a file.  Press Apply to process the file or Delete to remove it.";
+	//Enable Apply and Delete Buttons.
+	document.getElementById('Preview').disabled = false;
+	document.getElementById('Delete').disabled = false;
+}
+
+function configurationChanged() {
+	var statusMessage = document.getElementById('statusMessage');
+	statusMessage.innerHTML = "Configuration values changed please select Process File to see changes.";
+}
+
+function tableListChanged() {
+	document.getElementById('hidPostBackAction').value = "TableChange";
+	document.forms[0].submit();
+}
+
+function ConfirmFileDelete(btn)
+{
+
+	var r=confirm("Are you sure you want to delete this file?");
+	if (r==true)
+	{
+		//Set hidden value.
+		//document.forms[0].submit();
+		//btn.value = "true";
+		return true;
+	}
+	else {
+		//btn.value = "false";
+		return false;
+	}
+	
+	
+}
+
+function ConfirmFileProcess(btn)
+{
+
+	var r=confirm("Are you sure you want to process this file?");
+	if (r==true)
+	{
+		//Set hidden value.
+		//document.forms[0].submit();
+		//btn.value = "true";
+		return true;
+	}
+	else {
+		//btn.value = "Delete";
+		return false;
+	}
+	
+	
+}
+
+function SelectElement(valueToSelect,selectList)
+{    
+    var element = document.getElementById(selectList);
+    var isFound = false;
+
+    for (var i=0; i<element.options.length; i++)
+    {
+     if ( element.options[i].value == valueToSelect )
+     {
+    	 element.options[i].selected = true;
+      isFound = true;
+     }
+    }
+    if ( isFound == false )
+    	element.options[0].selected = true;
+}
+
+
+function SetElement(valueToSet,ElementID)
+{
+	var element = document.getElementById(ElementID);
+	if(valueToSet != 0)
+		element.value = valueToSet;
+}
+
+
+</script>
+
+
+<style>
+
+
+
+
+hr {
+  border: 0;
+  width: 80%;
+  height: 5px;
+}
+
+
+#leftContainer {
+  
+  width: 45%; 
+  
+  float:left;
+
+  margin-left:10px;
+  margin-right:10px;
+  margin-top:10px;
+  height: 800px;
+  
+}
+
+#fileImport {
+  background: #EBEBEB;
+
+  padding:25px 50px;
+  margin-bottom:10px;
+  height:120px;
+  
+}
+
+#options {
+  background: #EBEBEB;
+
+  padding:25px 25px;
+  height:30%; 
+}
+
+#matching {
+  background: #EBEBEB;
+
+  padding:25px 25px;
+  margin-top: 25px;
+   
+  
+}
+
+#upperContainer {
+  margin:auto;
+  width: 800px; 
+  
+  height:1000px;
+}
+
+#rightContainer {
+  float:right;
+  width: 45%; 
+  
+  height: 800px;
+  margin-top:10px;
+  margin-bottom:10px;
+  margin-left:10px;
+  overflow:hidden;
+}
+
+#tableInfo {
+  
+  margin:auto;
+  background-color: #EBEBEB;
+  width:70%;
+  height:693px;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 50px;
+  padding-bottom: 25px;
+}
+
+
+
+#columnList {
+  background:white;
+  overflow:auto;
+  height:550px;
+  
+}
+
+#bottomContainer {
+  
+  width: 780px; 
+  margin:auto;
+  
+  border-width:10px;
+  height:600px;
+  display:table;
+}
+
+#importPreview { /* this is the bottom */
+  
+  margin-bottom:10px;
+  margin-left:40px;
+  margin-right:30px;
+  padding:10px 10px;
+  float:left;
+  width: 754px;
+  height:50%;
+  display:table;
+  background: #EBEBEB; 
+  
+  overflow:visible;
+  
+}
+
+#buttonContainer {
+	margin:auto;
+	height: 50px;
+	width: 800px; 
+	border-width:10px;
+	padding:10px 10px;
+}
+
+
+div.fileinputs {
+  position: relative;
+  
+  
+}
+
+div.fakeFile {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+	width:800px;
+	cursor:pointer;
+	float:left;
+	
+}
+
+input.file {
+	position: relative;
+	text-align: right;
+	right:120px;
+	float:right;
+	-moz-opacity:0 ;
+	filter:alpha(opacity: 0);
+	opacity: 0;
+	z-index: 2;
+}
+form ol {
+		list-style:none;
+		margin:0;
+		padding:0;
+		}
+		form li {
+				padding: 6px;
+				background:#e1e1e1;
+				margin-bottom: 1px;
+				}
+		
+				
+				form label {
+							float: left;
+							width:120px;
+							text-align:7px;
+							color:#0066CC;
+							line-height: 23px;
+						   }
+						   .wide label{
+						   					width:260px;
+						   					}
+
+				form input,select {
+							padding: 4px;
+							font: 13px Georgia, "Times New Roman", Times, serif;
+							border: 1px solid #999999;
+							}
+							form select:focus, input:focus {
+											border:1px solid #666;
+											background:#e3f1f1;
+											}
+							
+span.fullRow {
+	display:block;
+	overflow: hidden;
+	padding: 0 4px 0 6px;
+}
+
+.fullRow select {
+				width:110px;
+				}
+.fullRow #dateSelect {
+				width: 160px;
+}
+</style>
+</head>
+<body class="body_top">
+
+<form method="post" action="/openemr-importer2/contrib/dataImporter/public/importer/form" enctype="multipart/form-data">
+
+<input name="hidTableData" value="" id="hidTableData" type="hidden">
+<input name="hidPostBackAction" value="" id="hidPostBackAction" type="hidden">
+Data Importer
+<div id="upperContainer">
+			<div id="fileImport">
+				File Selection <br>
+				<!--  File processor -->
+
+						<div class="fileinputs">
+							
+							
+<input name="MAX_FILE_SIZE" value="31457280" id="MAX_FILE_SIZE" type="hidden">
+<input name="dataFile" id="dataFile" class="file" type="file">							<div class="fakeFile">
+								<input size="80" disabled="disabled" id="fakeFileInputBox"> 
+								
+								<!-- 			
+								Select <img src="/openemr-importer2/images/button_select_clickOnly.gif" />
+								 -->
+								 
+								 <input value="Select" style="width:90px" type="submit">
+							</div>
+						</div>
+					<br>
+				<div style="float:left; margin-top:10px">
+					<div style="width:100px;float:left">
+						
+<input name="uploadFile" id="uploadFile" value="Upload" style="width:90px;" type="submit">						
+<input name="Delete" id="Delete" value="Delete" disabled="disabled" onclick="return ConfirmFileDelete(this)" style="width:90px;" type="submit">						<div style="height: 4px;"></div>
+						
+<input name="Preview" id="Preview" value="Apply" disabled="disabled" style="width:90px;" type="submit">						
+						
+<input name="processFile" id="processFile" value="Process File" disabled="disabled" onclick="return ConfirmFileProcess(this)" style="width:90px;" type="submit">					</div>
+					
+					<div style="float:right;width=600px;">
+					Uploaded Files
+					<dd id="fileList-element">
+<select name="fileList" id="fileList" size="4" style="min-width: 500px;" onchange="fileSelected()">
+    <option value="Patient Data Export 2001-6-25.txt" label="Patient Data Export 2001-6-25.txt">Patient Data Export 2001-6-25.txt</option>
+    <option value="Patient Data Export 2001-6-25a.txt" label="Patient Data Export 2001-6-25a.txt">Patient Data Export 2001-6-25a.txt</option>
+    <option value="Patient Data Export 2001-6-25b.txt" label="Patient Data Export 2001-6-25b.txt">Patient Data Export 2001-6-25b.txt</option>
+    <option value="Patient Data Export 2001-6-25Clean.txt" label="Patient Data Export 2001-6-25Clean.txt">Patient Data Export 2001-6-25Clean.txt</option>
+    <option value="Patient Data Export 2012-6-25.xls" label="Patient Data Export 2012-6-25.xls">Patient Data Export 2012-6-25.xls</option>
+    <option value="Patient Data Simple Import.txt" label="Patient Data Simple Import.txt">Patient Data Simple Import.txt</option>
+    <option value="test-patient.txt" label="test-patient.txt">test-patient.txt</option>
+    <option value="testAddress.txt" label="testAddress.txt">testAddress.txt</option>
+</select></dd>					</div>
+				</div>
+				
+				<br>
+			</div>
+	
+	<div id="leftContainer">
+			
+			<div id="options">
+				 <em>Basic Options</em><br>
+				<a href="http://www.asciitable.com/" target="_blank">ASCII Chart 
+			 <img src="DataImporter_files/new_window_icon.gif" alt="Ascii Chart link"></a>
+				<ol>
+					<li>
+						<label for="fieldDelimit">Field Delimiters</label>
+						<span class="fullRow">
+<select name="fieldDelimit" id="fieldDelimit" onchange='SetElement(this.value,this.attributes["id"].value+"Box");configurationChanged();'>
+    <option value="-1" label="None">None</option>
+    <option value="0" label="Other">Other</option>
+    <option value="44" label=", (Comma)" selected="selected">, (Comma)</option>
+    <option value="124" label="| (Pipe">| (Pipe</option>
+    <option value="9" label="(Tab)">(Tab)</option>
+</select>
+<input name="fieldDelimitBox" id="fieldDelimitBox" value="44" class="textbox" size="4" onchange='SelectElement(this.value,this.attributes["id"].value.replace("Box",""));configurationChanged();' type="text"></span>
+					</li>
+					<li>
+						<label for="dateSelect" title="Select the format of used for the date field.">Date Format</label>
+						<span class="fullRow">
+<select name="dateSelect" id="dateSelect" onchange="configurationChanged()">
+    <option selected="selected" value="none" label="None">None</option>
+    <option value="0,1,2" label="dd-mm-YYYY">dd-mm-YYYY</option>
+    <option value="1,0,2" label="mm-dd-YYYY">mm-dd-YYYY</option>
+    <option value="2,0,1" label="YYYY-dd-mm">YYYY-dd-mm</option>
+    <option value="2,1,0" label="YYYY-mm-dd">YYYY-mm-dd</option>
+</select></span>
+					</li>
+					<li>
+						<label for="txtQualifier">Text Qualifier</label>
+						<span class="fullRow">
+<select name="txtQualifier" id="txtQualifier" onchange='SetElement(this.value,this.attributes["id"].value+"Box")'>
+    <option value="0" label="Other">Other</option>
+    <option value="34" label="&quot;" selected="selected">"</option>
+    <option value="39" label="'">'</option>
+    <option value="96" label="`">`</option>
+    <option value="124" label="| (Pipe">| (Pipe</option>
+</select>
+<input name="txtQualifierBox" id="txtQualifierBox" value="34" class="textbox" size="4" onchange='SelectElement(this.value,this.attributes["id"].value.replace("Box",""));configurationChanged();' type="text"></span>
+					</li>
+				</ol>
+				<em>Advanced Options</em>
+				<ol>
+					<li>
+						
+<select name="txtEncoding" id="txtEncoding" onclick="configurationChanged()" style="width:160px">
+    <option selected="selected" value="UTF-7" label="ASCII">ASCII</option>
+    <option value="utf8" label="UTF-8">UTF-8</option>
+    <option value="EUC-JP" label="EUC-JP">EUC-JP</option>
+    <option value="eucJP-win" label="eucJP-win">eucJP-win</option>
+    <option value="JIS" label="JIS">JIS</option>
+    <option value="ISO-8859-1" label="ISO-8859-1">ISO-8859-1</option>
+    <option value="ISO-8859-2" label="ISO-8859-2">ISO-8859-2</option>
+    <option value="ISO-8859-3" label="ISO-8859-3">ISO-8859-3</option>
+    <option value="ISO-8859-4" label="ISO-8859-4">ISO-8859-4</option>
+    <option value="ISO-8859-5" label="ISO-8859-5">ISO-8859-5</option>
+    <option value="ISO-8859-6" label="ISO-8859-6">ISO-8859-6</option>
+    <option value="ISO-8859-7" label="ISO-8859-7">ISO-8859-7</option>
+    <option value="ISO-8859-8" label="ISO-8859-8">ISO-8859-8</option>
+    <option value="ISO-8859-9" label="ISO-8859-9">ISO-8859-9</option>
+    <option value="ISO-8859-10" label="ISO-8859-10">ISO-8859-10</option>
+    <option value="ISO-8859-13" label="ISO-8859-13">ISO-8859-13</option>
+    <option value="ISO-8859-14" label="ISO-8859-14">ISO-8859-14</option>
+    <option value="ISO-8859-15" label="ISO-8859-15">ISO-8859-15</option>
+    <option value="UTF-16BE" label="UTF-16BE">UTF-16BE</option>
+    <option value="UTF-16LE" label="UTF-16LE">UTF-16LE</option>
+</select><label for="txtEncoding">Text Encoding</label>
+					</li>
+					<li class="wide">
+						
+<input name="firstRowColumnHeading" value="0" type="hidden"><input name="firstRowColumnHeading" id="firstRowColumnHeading" value="1" onchange="configurationChanged()" type="checkbox"><label for="firstRowColumnHeading">First Row is Column Headings?</label>
+					</li>
+				</ol>
+			</div>
+			
+			<div id="matching">
+            <!-- This is the matching section -->
+            <em>Matching Options</em><br>
+            <div id="matchSuffix">These options are only enabled when the table contains a <i>pid</i> field.</div>
+            <div style="height:10px;"></div>
+	    	<ol>
+		    	<li>
+<input name="matchAddNew" value="0" type="hidden"><input name="matchAddNew" id="matchAddNew" value="1" type="checkbox">		    	
+Add New patient for unmatched patients/Update Matched Patients.		    	</li>
+	    	</ol>
+            
+            <div style="height:10px;"></div>
+            
+            <ol>
+	            <li>
+	            	<label for="matchLName">Last Name</label>
+<input name="matchLName" value="0" type="hidden"><input name="matchLName" id="matchLName" value="1" type="checkbox">	            </li> 
+	            
+		    	<li>
+		    		<label for="matchFName">First Name</label>
+<input name="matchFName" value="0" type="hidden"><input name="matchFName" id="matchFName" value="1" type="checkbox">		    	</li>
+		    	<li>
+		    		<label for="matchMName">Middle Name</label>
+<input name="matchMName" value="0" type="hidden"><input name="matchMName" id="matchMName" value="1" type="checkbox">		    	</li>
+		    	<li>
+		    		<label for="matchSS">SS</label>
+<input name="matchSS" value="0" type="hidden"><input name="matchSS" id="matchSS" value="1" type="checkbox">		    	</li>
+		    	<li>
+		    		<label for="matchDateOfBirth">Date of Birth</label>
+<input name="matchDateOfBirth" value="0" type="hidden"><input name="matchDateOfBirth" id="matchDateOfBirth" value="1" type="checkbox">		    	</li>
+		    	<li>
+		    		<label for="matchSex">Sex</label>
+<input name="matchSex" value="0" type="hidden"><input name="matchSex" id="matchSex" value="1" type="checkbox">		    	</li>
+		    	<li>	
+		    		
+<input name="matchPatient_Id" value="0" type="hidden"><input name="matchPatient_Id" id="matchPatient_Id" value="1" type="checkbox"><label for="matchPatient_Id">Patient_ID</label>
+		   		</li>
+	    	</ol>
+	    	</div>
+		</div>
+		<div id="rightContainer">
+			<div id="tableInfo">
+			OpenEMR Tables to import into			<br>
+			<dt id="tableList-label">&nbsp;</dt>
+<dd id="tableList-element">
+<select name="tableList" id="tableList" onchange="tableListChanged()">
+    <option value="addresses" label="addresses">addresses</option>
+    <option value="amc_misc_data" label="amc_misc_data">amc_misc_data</option>
+    <option value="ar_activity" label="ar_activity">ar_activity</option>
+    <option value="ar_session" label="ar_session">ar_session</option>
+    <option value="array" label="array">array</option>
+    <option value="audit_details" label="audit_details">audit_details</option>
+    <option value="audit_master" label="audit_master">audit_master</option>
+    <option value="automatic_notification" label="automatic_notification">automatic_notification</option>
+    <option value="batchcom" label="batchcom">batchcom</option>
+    <option value="billing" label="billing">billing</option>
+    <option value="categories" label="categories">categories</option>
+    <option value="categories_seq" label="categories_seq">categories_seq</option>
+    <option value="categories_to_documents" label="categories_to_documents">categories_to_documents</option>
+    <option value="chart_tracker" label="chart_tracker">chart_tracker</option>
+    <option value="claims" label="claims">claims</option>
+    <option value="clinical_plans" label="clinical_plans">clinical_plans</option>
+    <option value="clinical_plans_rules" label="clinical_plans_rules">clinical_plans_rules</option>
+    <option value="clinical_rules" label="clinical_rules">clinical_rules</option>
+    <option value="code_types" label="code_types">code_types</option>
+    <option value="codes" label="codes">codes</option>
+    <option value="config" label="config">config</option>
+    <option value="config_seq" label="config_seq">config_seq</option>
+    <option value="customlists" label="customlists">customlists</option>
+    <option value="dated_reminders" label="dated_reminders">dated_reminders</option>
+    <option value="dated_reminders_link" label="dated_reminders_link">dated_reminders_link</option>
+    <option value="documents" label="documents">documents</option>
+    <option value="documents_legal_categories" label="documents_legal_categories">documents_legal_categories</option>
+    <option value="documents_legal_detail" label="documents_legal_detail">documents_legal_detail</option>
+    <option value="documents_legal_master" label="documents_legal_master">documents_legal_master</option>
+    <option value="drug_inventory" label="drug_inventory">drug_inventory</option>
+    <option value="drug_sales" label="drug_sales">drug_sales</option>
+    <option value="drug_templates" label="drug_templates">drug_templates</option>
+    <option value="drugs" label="drugs">drugs</option>
+    <option value="eligibility_response" label="eligibility_response">eligibility_response</option>
+    <option value="eligibility_verification" label="eligibility_verification">eligibility_verification</option>
+    <option value="employer_data" label="employer_data">employer_data</option>
+    <option value="enc_category_map" label="enc_category_map">enc_category_map</option>
+    <option value="extended_log" label="extended_log">extended_log</option>
+    <option value="facility" label="facility">facility</option>
+    <option value="facility_user_ids" label="facility_user_ids">facility_user_ids</option>
+    <option value="fee_sheet_options" label="fee_sheet_options">fee_sheet_options</option>
+    <option value="form_dictation" label="form_dictation">form_dictation</option>
+    <option value="form_encounter" label="form_encounter">form_encounter</option>
+    <option value="form_misc_billing_options" label="form_misc_billing_options">form_misc_billing_options</option>
+    <option value="form_reviewofs" label="form_reviewofs">form_reviewofs</option>
+    <option value="form_ros" label="form_ros">form_ros</option>
+    <option value="form_soap" label="form_soap">form_soap</option>
+    <option value="form_vitals" label="form_vitals">form_vitals</option>
+    <option value="forms" label="forms">forms</option>
+    <option value="gacl_acl" label="gacl_acl">gacl_acl</option>
+    <option value="gacl_acl_sections" label="gacl_acl_sections">gacl_acl_sections</option>
+    <option value="gacl_acl_seq" label="gacl_acl_seq">gacl_acl_seq</option>
+    <option value="gacl_aco" label="gacl_aco">gacl_aco</option>
+    <option value="gacl_aco_map" label="gacl_aco_map">gacl_aco_map</option>
+    <option value="gacl_aco_sections" label="gacl_aco_sections">gacl_aco_sections</option>
+    <option value="gacl_aco_sections_seq" label="gacl_aco_sections_seq">gacl_aco_sections_seq</option>
+    <option value="gacl_aco_seq" label="gacl_aco_seq">gacl_aco_seq</option>
+    <option value="gacl_aro" label="gacl_aro">gacl_aro</option>
+    <option value="gacl_aro_groups" label="gacl_aro_groups">gacl_aro_groups</option>
+    <option value="gacl_aro_groups_id_seq" label="gacl_aro_groups_id_seq">gacl_aro_groups_id_seq</option>
+    <option value="gacl_aro_groups_map" label="gacl_aro_groups_map">gacl_aro_groups_map</option>
+    <option value="gacl_aro_map" label="gacl_aro_map">gacl_aro_map</option>
+    <option value="gacl_aro_sections" label="gacl_aro_sections">gacl_aro_sections</option>
+    <option value="gacl_aro_sections_seq" label="gacl_aro_sections_seq">gacl_aro_sections_seq</option>
+    <option value="gacl_aro_seq" label="gacl_aro_seq">gacl_aro_seq</option>
+    <option value="gacl_axo" label="gacl_axo">gacl_axo</option>
+    <option value="gacl_axo_groups" label="gacl_axo_groups">gacl_axo_groups</option>
+    <option value="gacl_axo_groups_map" label="gacl_axo_groups_map">gacl_axo_groups_map</option>
+    <option value="gacl_axo_map" label="gacl_axo_map">gacl_axo_map</option>
+    <option value="gacl_axo_sections" label="gacl_axo_sections">gacl_axo_sections</option>
+    <option value="gacl_groups_aro_map" label="gacl_groups_aro_map">gacl_groups_aro_map</option>
+    <option value="gacl_groups_axo_map" label="gacl_groups_axo_map">gacl_groups_axo_map</option>
+    <option value="gacl_phpgacl" label="gacl_phpgacl">gacl_phpgacl</option>
+    <option value="geo_country_reference" label="geo_country_reference">geo_country_reference</option>
+    <option value="geo_zone_reference" label="geo_zone_reference">geo_zone_reference</option>
+    <option value="globals" label="globals">globals</option>
+    <option value="gprelations" label="gprelations">gprelations</option>
+    <option value="groups" label="groups">groups</option>
+    <option value="history_data" label="history_data">history_data</option>
+    <option value="icd10_dx_order_code" label="icd10_dx_order_code">icd10_dx_order_code</option>
+    <option value="icd10_gem_dx_10_9" label="icd10_gem_dx_10_9">icd10_gem_dx_10_9</option>
+    <option value="icd10_gem_dx_9_10" label="icd10_gem_dx_9_10">icd10_gem_dx_9_10</option>
+    <option value="icd10_gem_pcs_10_9" label="icd10_gem_pcs_10_9">icd10_gem_pcs_10_9</option>
+    <option value="icd10_gem_pcs_9_10" label="icd10_gem_pcs_9_10">icd10_gem_pcs_9_10</option>
+    <option value="icd10_pcs_order_code" label="icd10_pcs_order_code">icd10_pcs_order_code</option>
+    <option value="icd10_reimbr_dx_9_10" label="icd10_reimbr_dx_9_10">icd10_reimbr_dx_9_10</option>
+    <option value="icd10_reimbr_pcs_9_10" label="icd10_reimbr_pcs_9_10">icd10_reimbr_pcs_9_10</option>
+    <option value="icd9_dx_code" label="icd9_dx_code">icd9_dx_code</option>
+    <option value="icd9_dx_long_code" label="icd9_dx_long_code">icd9_dx_long_code</option>
+    <option value="icd9_sg_code" label="icd9_sg_code">icd9_sg_code</option>
+    <option value="icd9_sg_long_code" label="icd9_sg_long_code">icd9_sg_long_code</option>
+    <option value="immunizations" label="immunizations">immunizations</option>
+    <option value="input_mask" label="input_mask">input_mask</option>
+    <option value="insurance_companies" label="insurance_companies">insurance_companies</option>
+    <option value="insurance_data" label="insurance_data">insurance_data</option>
+    <option value="insurance_numbers" label="insurance_numbers">insurance_numbers</option>
+    <option value="integration_mapping" label="integration_mapping">integration_mapping</option>
+    <option value="issue_encounter" label="issue_encounter">issue_encounter</option>
+    <option value="lang_constants" label="lang_constants">lang_constants</option>
+    <option value="lang_custom" label="lang_custom">lang_custom</option>
+    <option value="lang_definitions" label="lang_definitions">lang_definitions</option>
+    <option value="lang_languages" label="lang_languages">lang_languages</option>
+    <option value="layout_options" label="layout_options">layout_options</option>
+    <option value="lbf_data" label="lbf_data">lbf_data</option>
+    <option value="list_options" label="list_options">list_options</option>
+    <option value="lists" label="lists">lists</option>
+    <option value="lists_touch" label="lists_touch">lists_touch</option>
+    <option value="log" label="log">log</option>
+    <option value="notes" label="notes">notes</option>
+    <option value="notification_log" label="notification_log">notification_log</option>
+    <option value="notification_settings" label="notification_settings">notification_settings</option>
+    <option value="onotes" label="onotes">onotes</option>
+    <option value="openemr_module_vars" label="openemr_module_vars">openemr_module_vars</option>
+    <option value="openemr_modules" label="openemr_modules">openemr_modules</option>
+    <option value="openemr_postcalendar_categories" label="openemr_postcalendar_categories">openemr_postcalendar_categories</option>
+    <option value="openemr_postcalendar_events" label="openemr_postcalendar_events">openemr_postcalendar_events</option>
+    <option value="openemr_postcalendar_limits" label="openemr_postcalendar_limits">openemr_postcalendar_limits</option>
+    <option value="openemr_postcalendar_topics" label="openemr_postcalendar_topics">openemr_postcalendar_topics</option>
+    <option value="openemr_session_info" label="openemr_session_info">openemr_session_info</option>
+    <option value="patient_access_offsite" label="patient_access_offsite">patient_access_offsite</option>
+    <option value="patient_access_onsite" label="patient_access_onsite">patient_access_onsite</option>
+    <option value="patient_data" label="patient_data" selected="selected">patient_data</option>
+    <option value="patient_data_test" label="patient_data_test">patient_data_test</option>
+    <option value="patient_reminders" label="patient_reminders">patient_reminders</option>
+    <option value="payment_gateway_details" label="payment_gateway_details">payment_gateway_details</option>
+    <option value="payments" label="payments">payments</option>
+    <option value="pharmacies" label="pharmacies">pharmacies</option>
+    <option value="phone_numbers" label="phone_numbers">phone_numbers</option>
+    <option value="pma_bookmark" label="pma_bookmark">pma_bookmark</option>
+    <option value="pma_column_info" label="pma_column_info">pma_column_info</option>
+    <option value="pma_history" label="pma_history">pma_history</option>
+    <option value="pma_pdf_pages" label="pma_pdf_pages">pma_pdf_pages</option>
+    <option value="pma_relation" label="pma_relation">pma_relation</option>
+    <option value="pma_table_coords" label="pma_table_coords">pma_table_coords</option>
+    <option value="pma_table_info" label="pma_table_info">pma_table_info</option>
+    <option value="pnotes" label="pnotes">pnotes</option>
+    <option value="prescriptions" label="prescriptions">prescriptions</option>
+    <option value="prices" label="prices">prices</option>
+    <option value="procedure_answers" label="procedure_answers">procedure_answers</option>
+    <option value="procedure_order" label="procedure_order">procedure_order</option>
+    <option value="procedure_order_code" label="procedure_order_code">procedure_order_code</option>
+    <option value="procedure_providers" label="procedure_providers">procedure_providers</option>
+    <option value="procedure_questions" label="procedure_questions">procedure_questions</option>
+    <option value="procedure_report" label="procedure_report">procedure_report</option>
+    <option value="procedure_result" label="procedure_result">procedure_result</option>
+    <option value="procedure_type" label="procedure_type">procedure_type</option>
+    <option value="product_warehouse" label="product_warehouse">product_warehouse</option>
+    <option value="registry" label="registry">registry</option>
+    <option value="report_results" label="report_results">report_results</option>
+    <option value="rule_action" label="rule_action">rule_action</option>
+    <option value="rule_action_item" label="rule_action_item">rule_action_item</option>
+    <option value="rule_filter" label="rule_filter">rule_filter</option>
+    <option value="rule_patient_data" label="rule_patient_data">rule_patient_data</option>
+    <option value="rule_reminder" label="rule_reminder">rule_reminder</option>
+    <option value="rule_target" label="rule_target">rule_target</option>
+    <option value="sequences" label="sequences">sequences</option>
+    <option value="simple_test" label="simple_test">simple_test</option>
+    <option value="standardized_tables_track" label="standardized_tables_track">standardized_tables_track</option>
+    <option value="supported_external_dataloads" label="supported_external_dataloads">supported_external_dataloads</option>
+    <option value="syndromic_surveillance" label="syndromic_surveillance">syndromic_surveillance</option>
+    <option value="template_users" label="template_users">template_users</option>
+    <option value="transactions" label="transactions">transactions</option>
+    <option value="user_settings" label="user_settings">user_settings</option>
+    <option value="users" label="users">users</option>
+    <option value="users_facility" label="users_facility">users_facility</option>
+    <option value="version" label="version">version</option>
+    <option value="x12_partners" label="x12_partners">x12_partners</option>
+</select></dd>			
+			
+			<br><br>
+			List of Columns:
+			<div id="columnList">
+			
+<div style="background-color:white;">id</div>
+<div style="background-color:#CCCCCC;">title</div>
+<div style="background-color:white;">language</div>
+<div style="background-color:#CCCCCC;">financial</div>
+<div style="background-color:white;">fname</div>
+<div style="background-color:#CCCCCC;">lname</div>
+<div style="background-color:white;">mname</div>
+<div style="background-color:#CCCCCC;">DOB (Date)</div>
+<div style="background-color:white;">street</div>
+<div style="background-color:#CCCCCC;">postal_code</div>
+<div style="background-color:white;">city</div>
+<div style="background-color:#CCCCCC;">state</div>
+<div style="background-color:white;">country_code</div>
+<div style="background-color:#CCCCCC;">drivers_license</div>
+<div style="background-color:white;">ss</div>
+<div style="background-color:#CCCCCC;">occupation</div>
+<div style="background-color:white;">phone_home</div>
+<div style="background-color:#CCCCCC;">phone_biz</div>
+<div style="background-color:white;">phone_contact</div>
+<div style="background-color:#CCCCCC;">phone_cell</div>
+<div style="background-color:white;">pharmacy_id</div>
+<div style="background-color:#CCCCCC;">status</div>
+<div style="background-color:white;">contact_relationship</div>
+<div style="background-color:#CCCCCC;">date</div>
+<div style="background-color:white;">sex</div>
+<div style="background-color:#CCCCCC;">referrer</div>
+<div style="background-color:white;">referrerID</div>
+<div style="background-color:#CCCCCC;">providerID</div>
+<div style="background-color:white;">email</div>
+<div style="background-color:#CCCCCC;">ethnoracial</div>
+<div style="background-color:white;">race</div>
+<div style="background-color:#CCCCCC;">ethnicity</div>
+<div style="background-color:white;">interpretter</div>
+<div style="background-color:#CCCCCC;">migrantseasonal</div>
+<div style="background-color:white;">family_size</div>
+<div style="background-color:#CCCCCC;">monthly_income</div>
+<div style="background-color:white;">homeless</div>
+<div style="background-color:#CCCCCC;">financial_review</div>
+<div style="background-color:white;">pubpid</div>
+<div style="background-color:#CCCCCC;">pid</div>
+<div style="background-color:white;">genericname1</div>
+<div style="background-color:#CCCCCC;">genericval1</div>
+<div style="background-color:white;">genericname2</div>
+<div style="background-color:#CCCCCC;">genericval2</div>
+<div style="background-color:white;">hipaa_mail</div>
+<div style="background-color:#CCCCCC;">hipaa_voice</div>
+<div style="background-color:white;">hipaa_notice</div>
+<div style="background-color:#CCCCCC;">hipaa_message</div>
+<div style="background-color:white;">hipaa_allowsms</div>
+<div style="background-color:#CCCCCC;">hipaa_allowemail</div>
+<div style="background-color:white;">squad</div>
+<div style="background-color:#CCCCCC;">fitness</div>
+<div style="background-color:white;">referral_source</div>
+<div style="background-color:#CCCCCC;">usertext1</div>
+<div style="background-color:white;">usertext2</div>
+<div style="background-color:#CCCCCC;">usertext3</div>
+<div style="background-color:white;">usertext4</div>
+<div style="background-color:#CCCCCC;">usertext5</div>
+<div style="background-color:white;">usertext6</div>
+<div style="background-color:#CCCCCC;">usertext7</div>
+<div style="background-color:white;">usertext8</div>
+<div style="background-color:#CCCCCC;">userlist1</div>
+<div style="background-color:white;">userlist2</div>
+<div style="background-color:#CCCCCC;">userlist3</div>
+<div style="background-color:white;">userlist4</div>
+<div style="background-color:#CCCCCC;">userlist5</div>
+<div style="background-color:white;">userlist6</div>
+<div style="background-color:#CCCCCC;">userlist7</div>
+<div style="background-color:white;">pricelevel</div>
+<div style="background-color:#CCCCCC;">regdate (Date)</div>
+<div style="background-color:white;">contrastart (Date)</div>
+<div style="background-color:#CCCCCC;">completed_ad</div>
+<div style="background-color:white;">ad_reviewed (Date)</div>
+<div style="background-color:#CCCCCC;">vfc</div>
+<div style="background-color:white;">mothersname</div>
+<div style="background-color:#CCCCCC;">guardiansname</div>
+<div style="background-color:white;">allow_imm_reg_use</div>
+<div style="background-color:#CCCCCC;">allow_imm_info_share</div>
+<div style="background-color:white;">allow_health_info_ex</div>
+<div style="background-color:#CCCCCC;">allow_patient_portal</div>
+<div style="background-color:white;">deceased_date</div>
+<div style="background-color:#CCCCCC;">deceased_reason</div>
+<div style="background-color:white;">soap_import_status</div>
+			
+			
+			
+			</div>
+		</div>
+</div>
+<div id="spacer">
+</div>
+</div>
+<div id="bottomContainer">
+	<div id="importPreview">
+	<em></em><br>
+	Number of Rows to Preview: 
+<select name="rowLimitList" id="rowLimitList">
+    <option selected="selected" value="10" label="10">10</option>
+    <option value="40" label="40">40</option>
+    <option value="100" label="100">100</option>
+    <option value="All" label="All">All</option>
+</select>	 <br>
+	Status Message: Please select a file to process.	<div class="statusMessage" id="statusMessage">
+		No data submitted	</div>
+		
+	</div>
+<br>
+
+</div>
+</form>
+<script type="text/javascript">
+init();
+</script>
+
+
+<div id="fancy_overlay"></div><div id="fancy_loading"><div></div></div><div id="fancy_outer"><div id="fancy_inner"><div id="fancy_close"></div><div id="fancy_bg"><div class="fancy_bg" id="fancy_bg_n"></div><div class="fancy_bg" id="fancy_bg_ne"></div><div class="fancy_bg" id="fancy_bg_e"></div><div class="fancy_bg" id="fancy_bg_se"></div><div class="fancy_bg" id="fancy_bg_s"></div><div class="fancy_bg" id="fancy_bg_sw"></div><div class="fancy_bg" id="fancy_bg_w"></div><div class="fancy_bg" id="fancy_bg_nw"></div></div><a href="javascript:;" id="fancy_left"><span class="fancy_ico" id="fancy_left_ico"></span></a><a href="javascript:;" id="fancy_right"><span class="fancy_ico" id="fancy_right_ico"></span></a><div id="fancy_content"></div></div></div><div id="fancy_title"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="fancy_title" id="fancy_title_left"></td><td class="fancy_title" id="fancy_title_main"><div></div></td><td class="fancy_title" id="fancy_title_right"></td></tr></tbody></table></div></body></html>
