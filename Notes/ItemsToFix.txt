@@ -1,5 +1,5 @@
-* Make buttons look like the rest of the application
-* Move "First Name", "Last Name" check boxes to the left.  This might take changing from the "label" html control.
+* Make buttons look like the rest of the application  (ALL)
+* Move "First Name", "Last Name" check boxes to the left.  This might take changing from the "label" html control. (Don't need to maintain functionality)
 * Make text a little smaller and closer together
 * Make to the top box (File to Import) and the file selection two different boxes.
 * Upload File and Apply should group together and Delete and Process File should be together
@@ -19,5 +19,5 @@ Chris Items:
 * Move to the modules folder
 * Problem with uploading files.
 
-
-http://localhost/openemr/interface/themes/../../images/bg_button_a_small.gif
+OpenEMR image location:
+url("../DataImporter_files/images/bg_button_a_small.gif") no-repeat scroll right top transparent
