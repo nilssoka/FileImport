@@ -604,25 +604,45 @@ font-weight: bold;
  * CSS BUTTONS
 */
 .css_button_small {
-    background: transparent url( '../../images/bg_button_a_small.gif' ) no-repeat scroll top right;
+/*
+	background: transparent url( '../../images/bg_button_a_small.gif' ) no-repeat scroll top right;
     color: #444;
     display: block;
     float: left;
     font: bold 9px arial, sans-serif;
     height: 19px;
     margin-right: 3px;
-    padding-right: 10px; /* sliding doors padding */
+    padding-right: 10px; /* sliding doors padding *//*
+    text-decoration: none;
+*/
+	background: url("http://localhost/openemr/interface/themes/../../images/bg_button_a_small.gif")
+	/*url("../../images/bg_button_a_small.gif")*/ no-repeat scroll right top transparent;
+    color: #444444;
+    display: block;
+    float: left;
+    font: bold 9px arial,sans-serif;
+    height: 19px;
+    margin-right: 3px;
+    padding-right: 10px;
     text-decoration: none;
 }
 
 .css_button_small span {
-    background: transparent url( '../../images/bg_button_span_small.gif' ) no-repeat;
+/*    
+	background: transparent url( '../../images/bg_button_span_small.gif' ) no-repeat;
     display: block;
     line-height: 20px;
     padding: 0px 0px 0px 10px;
+*/	
+    background: url("http://localhost/openemr/interface/themes/../../images/bg_button_span_small.gif")	
+	/*("../../images/bg_button_span_small.gif")*/ no-repeat scroll 0 0 transparent;
+    display: block;
+    line-height: 20px;
+    padding: 0 0 0 10px;	
 }
 
 .css_button {
+/*
     background: transparent url( '../../images/bg_button_a.gif' ) no-repeat scroll top right;
     color: #444;
     display: block;
@@ -630,16 +650,36 @@ font-weight: bold;
     font: bold 10px arial, sans-serif;
     height: 24px;
     margin-right: 3px;
-    padding-right: 10px; /* sliding doors padding */
+    padding-right: 10px; /* sliding doors padding *//*
     text-decoration: none;
+*/	
+	background: url("http://localhost/openemr/interface/themes/../../images/bg_button_a.gif")
+	/*("../../images/bg_button_a.gif")*/ no-repeat scroll right top transparent;
+    color: #444444;
+    display: block;
+    float: left;
+    font: bold 10px arial,sans-serif;
+    height: 24px;
+    margin-right: 3px;
+    padding-right: 10px;
+    text-decoration: none;	
+	
 }
 
 .css_button span {
+/*
     background: transparent url( '../../images/bg_button_span.gif' ) no-repeat;
     display: block;
     line-height: 14px;
     padding: 5px 0 5px 10px;
+*/	
+	background: url("http://localhost/openemr/interface/themes/../../images/bg_button_span.gif")
+	/*("../../images/bg_button_span.gif")*/ no-repeat scroll 0 0 transparent;
+    display: block;
+    line-height: 14px;
+    padding: 5px 0 5px 10px;
 }
+
 .sellistclass {
 float:left;
 }

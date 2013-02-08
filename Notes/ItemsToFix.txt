@@ -18,3 +18,6 @@ Bugs:
 Chris Items:
 * Move to the modules folder
 * Problem with uploading files.
+
+
+http://localhost/openemr/interface/themes/../../images/bg_button_a_small.gif
