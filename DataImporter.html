@@ -214,7 +214,7 @@ hr {
 
   padding:6px 50px;
   margin-bottom:10px;
-  height:163px;
+  height:50px;
   
 }
 
@@ -275,11 +275,11 @@ hr {
 
 #bottomContainer {
   
-  width: 780px; 
+  width: 95%; 
   margin:auto;
   
   border-width:10px;
-  height:600px;
+  <!-- height:600px; -->
   display:table;
 }
 
@@ -387,30 +387,39 @@ span.fullRow {
 		<input name="hidTableData" value="" id="hidTableData" type="hidden">
 		<input name="hidPostBackAction" value="" id="hidPostBackAction" type="hidden">
 		Data Importer
-		<div id="upperContainer">
-			<div id="fileImport">
-				File Selection <br>
-				<!--  File processor -->
-
+		<div id="upperContainer" style="height: 910px; padding-bottom: 20px;">
+			<div id="fileImport" style="padding-bottom: 5px; margin-bottom: 0px;">
+			File Selection
+			<br>
 				<div class="fileinputs">
-					<input name="MAX_FILE_SIZE" value="31457280" id="MAX_FILE_SIZE" type="hidden">
-					<input name="dataFile" id="dataFile" class="file" type="file">							
+					<input id="MAX_FILE_SIZE" type="hidden" value="31457280" name="MAX_FILE_SIZE">
+					<input id="dataFile" class="file" type="file" name="dataFile">
 					<div class="fakeFile">
-						<input size="83" disabled="disabled" id="fakeFileInputBox"> 
-							<!-- 			
-							Select <img src="/openemr-importer2/images/button_select_clickOnly.gif" />
-							 -->
-						<input value="Select" style="width:90px" type="submit">
+					<input id="fakeFileInputBox" disabled="disabled" size="83">
+					<input type="submit" style="width:90px" value="Select">
 					</div>
 				</div>
 				<br>
-				<div style="float:left; margin-top:10px">
-					<div style="width:90px;float:left">
-						<input name="uploadFile" id="uploadFile" value="Upload" style="width:80px; font-size: 11px;" type="submit">						
-						<input name="Delete" id="Delete" value="Delete" disabled="disabled" onclick="return ConfirmFileDelete(this)" style="width:80px; font-size: 11px;" type="submit">						
-						<div style="height: 4px;"></div>
-						<input name="Preview" id="Preview" value="Apply" disabled="disabled" style="width:80px; font-size: 11px;" type="submit">						
-						<input name="processFile" id="processFile" value="Process File" disabled="disabled" onclick="return ConfirmFileProcess(this)" style="width:80px; font-size: 11px;" type="submit">
+				<div style="background: none repeat scroll 0px 0px rgb(235, 235, 235); float: left; margin-top: 20px; width: 640px; height: 120px; padding: 2px 50px 2px 20px; border-left-width: 0px; margin-left: 0px;">
+					<div style="width: 90px; float: left; margin-left: 0px; border-left-width: 0px; padding-top: 5px; height: 110px;">
+					<!-- Need to determine functionality of anchro scripts-->
+						<a id="uploadFile" class="css_button" onclick="submit" style="width:80px;" href="">
+							<span>Upload</span>
+						</a>
+						<!--Original input script: <input name="uploadFile" id="uploadFile" value="Upload" style="width:90px;" type="submit"> -->
+						<a id="Delete" class="css_button" onclick="submit" style="width:90p;" href="">
+							<span>Delete</span>
+						</a>
+						<!-- <input name="Delete" id="Delete" value="Delete" disabled="disabled" onclick="return ConfirmFileDelete(this)" style="width:80px; font-size: 11px;" type="submit"> -->
+						<div style="height: 5px;"></div>
+						<a id="Preview" class="css_button" onclick="submit" style="width:90p;" href="">
+							<span>Preview</span>
+						</a>
+						<!-- <input name="Preview" id="Preview" value="Apply" disabled="disabled" style="width:80px; font-size: 11px;" type="submit"> -->
+						<a id="processFile" class="css_button" onclick="submit" style="width:80px;" href="">
+							<span>Process File</span>
+						</a>
+						<!-- <input name="processFile" id="processFile" value="Process File" disabled="disabled" onclick="return ConfirmFileProcess(this)" style="width:80px; font-size: 11px;" type="submit"> -->
 					</div>
 					<div style="float:right;width=600px;">
 						Uploaded Files
@@ -431,14 +440,18 @@ span.fullRow {
 				<br>
 			</div>
 	
-			<div id="leftContainer">
-				<div id="options" style="padding-top: 10px;">
+			<div id="leftContainer" style="height: 670px;">
+				<div id="options" style="padding-top: 10px; height: 245px;">
 					<em>Basic Options</em>
 					<br>
-					<a class="css_button_small" href="http://www.asciitable.com/" target="_blank">
-						<span>ASCII Chart</span> 
-					<!-- <img src="DataImporter_files/new_window_icon.gif" alt="Ascii Chart link"> -->
+					<a target="_blank" href="http://www.asciitable.com/" style="font-size: 10px;">
+						ASCII Chart
+						<img style="width: 10px;" alt="Ascii Chart link" src="DataImporter_files/new_window_icon.gif">
 					</a>
+					<!-- <a class="css_button_small" href="http://www.asciitable.com/" target="_blank">
+						<span>ASCII Chart</span> 
+					<!-- <img src="DataImporter_files/new_window_icon.gif" alt="Ascii Chart link">
+					</a>  -->
 					<ol>
 						<li>
 							<label for="fieldDelimit">Field Delimiters</label>
@@ -517,54 +530,57 @@ span.fullRow {
 				<!-- This is the matching section -->
 					<em>Matching Options</em>
 					<br>
-					<div id="matchSuffix">
+					<div id="matchSuffix" style="font-size: 15px">
 						These options are only enabled when the table contains a 
 						<i>pid</i> field.
 					</div>
 					<div style="height:10px;"></div>
 					<ol>
 						<li>
-							<input name="matchAddNew" value="0" type="hidden">
-							<input name="matchAddNew" id="matchAddNew" value="1" type="checkbox">		    	
-							Add New patient for unmatched patients/Update Matched Patients.
+							<div style="font-size: 15px">
+								<input name="matchAddNew" value="0" type="hidden">
+								<input name="matchAddNew" id="matchAddNew" value="1" type="checkbox">
+								Add New patient for unmatched patients/Update Matched Patients.
+							</div>
 						</li>
 					</ol>
 					<div style="height:10px;"></div>
 					<ol>
 						<li>
-							<label for="matchLName">Last Name</label>
+							<!-- <label for="matchLName">Last Name</label> -->
 							<input name="matchLName" value="0" type="hidden">
-							<input name="matchLName" id="matchLName" value="1" type="checkbox">
+							<input type="checkbox" name="matchLName" id="matchLName" value="1">
+							Last Name
 						</li> 
 						<li>
-							<label for="matchFName">First Name</label>
 							<input name="matchFName" value="0" type="hidden">
 							<input name="matchFName" id="matchFName" value="1" type="checkbox">
+							First Name
 						</li>
 						<li>
-							<label for="matchMName">Middle Name</label>
 							<input name="matchMName" value="0" type="hidden">
 							<input name="matchMName" id="matchMName" value="1" type="checkbox">
+							Middle Name
 						</li>
 						<li>
-							<label for="matchSS">SS</label>
 							<input name="matchSS" value="0" type="hidden">
 							<input name="matchSS" id="matchSS" value="1" type="checkbox">
+							SS
 						</li>
 						<li>
-							<label for="matchDateOfBirth">Date of Birth</label>
 							<input name="matchDateOfBirth" value="0" type="hidden">
 							<input name="matchDateOfBirth" id="matchDateOfBirth" value="1" type="checkbox">		    	
+							Date of Birth
 						</li>
 						<li>
-							<label for="matchSex">Sex</label>
 							<input name="matchSex" value="0" type="hidden">
 							<input name="matchSex" id="matchSex" value="1" type="checkbox">
+							Sex
 						</li>
 						<li>	
 							<input name="matchPatient_Id" value="0" type="hidden">
 							<input name="matchPatient_Id" id="matchPatient_Id" value="1" type="checkbox">
-							<label for="matchPatient_Id">Patient_ID</label>
+							Patient_ID
 						</li>
 					</ol>
 				</div>
@@ -838,15 +854,15 @@ span.fullRow {
 			<div id="spacer"></div>
 		</div>
 		<div id="bottomContainer">
-			<div id="importPreview">
+			<div id="importPreview" style="margin-left: 10px; width: 95%; margin-right: 10px; height: auto;">
 				<em></em>
 				<br>
 				Number of Rows to Preview: 
 				<select name="rowLimitList" id="rowLimitList">
-					<option selected="selected" value="10" label="10">10</option>
+					<option selected="selected" value="All" label="All">All</option>
+					<option value="10" label="10">10</option>
 					<option value="40" label="40">40</option>
 					<option value="100" label="100">100</option>
-					<option value="All" label="All">All</option>
 				</select>
 				<br>
 				Status Message: Please select a file to process.
